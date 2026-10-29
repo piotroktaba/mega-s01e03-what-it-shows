@@ -1,0 +1,38 @@
+---
+layout: runbook
+title: '#4471 · two date problems'
+owner: piotroktaba
+status: proposed
+reviewed: 2026-10-29
+signature: 'github:piotroktaba'
+---
+
+<script>
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+Ticket #4471 contains two problems. The intake tags and subject lines do not reliably separate
+them; the tenant's locale, booking form, and report channel do.
+
+<CauseTable ticket={4471} />
+
+## Shared parser
+
+The shared parser reads every date month first. For tenants whose locale writes the day first,
+the month and day are swapped. This affects app and email reports, plus form reports that do not
+come through booking-v3's month-first hint.
+
+## Booking-v3 hint
+
+Booking-v3 displays `MM/DD/YYYY`. People follow that hint, but day-first tenants interpret the
+submitted value in their locale's order. These form reports need a separate fix from the shared
+parser.
+
+<Callout>
+Split #4471 by computed cause, not by subject or intake tag. Keep one engineering ticket for each
+row in the table.
+</Callout>
+
+<RenderStamp {signature} />
